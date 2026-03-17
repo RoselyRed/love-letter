@@ -3,17 +3,17 @@ const btn = document.getElementById("nextBtn");
 const hint = document.getElementById("hint");
 const music = document.getElementById("music");
 
-// Ensure music works
+// Music fix (important)
 music.volume = 0.6;
 
 document.body.addEventListener("click", () => {
-  music.play().catch(() => {});
+  music.play().catch(()=>{});
   hint.style.display = "none";
 }, { once: true });
 
-// STORY (Refined emotional pacing)
+// STORY (cinematic pacing)
 const story = [
-`I wasn’t planning to say anything...`,
+`I wasn't planning to say anything...`,
 
 `But silence... has been louder than words lately.`,
 
@@ -27,7 +27,7 @@ const story = [
 
 `Because you were there.`,
 
-`And without realizing it...`,
+`And without even realizing it...`,
 
 `You became my favorite part of life.`,
 
@@ -35,17 +35,21 @@ const story = [
 
 `When we don’t talk anymore...`,
 
-`My mind still finds you... in everything.`,
+`My thoughts still find you.`,
+
+`In silence... in songs... in everything.`,
 
 `Maybe I shouldn’t say this...`,
 
 `Maybe I’m too late...`,
 
-`But if I don’t say it now... I never will.`,
+`But if I don’t say it now...`,
+
+`I’ll regret it forever.`,
 
 `So just this once...`,
 
-`Let me be honest...`,
+`Let me be completely honest...`,
 
 `In every version of my life...`,
 
@@ -58,8 +62,8 @@ const story = [
 
 let index = 0;
 
-// TYPEWRITER WITH PAUSE
-function typeText(text, callback) {
+// Typewriter with emotional pauses
+function typeText(text) {
   textEl.innerHTML = "";
   let i = 0;
 
@@ -68,11 +72,11 @@ function typeText(text, callback) {
       textEl.innerHTML += text.charAt(i);
       i++;
 
+      let char = text.charAt(i-1);
       let delay = 35;
 
-      if (text.charAt(i-1) === "." || text.charAt(i-1) === "...") {
-        delay = 300; // pause effect
-      }
+      if (char === ".") delay = 250;
+      if (char === "...") delay = 400;
 
       setTimeout(typing, delay);
     } else {
@@ -83,7 +87,7 @@ function typeText(text, callback) {
   typing();
 }
 
-// NEXT BUTTON
+// Button flow
 btn.addEventListener("click", () => {
   btn.classList.add("hidden");
   index++;
@@ -98,10 +102,10 @@ btn.addEventListener("click", () => {
   }
 });
 
-// START FIRST TEXT
+// Start
 typeText(story[0]);
 
-// CANVAS (Floating + Explosion)
+// Canvas animation
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -110,7 +114,7 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-// Ambient floating hearts
+// Floating hearts (ambient)
 for (let i = 0; i < 40; i++) {
   particles.push({
     x: Math.random() * canvas.width,
@@ -121,8 +125,9 @@ for (let i = 0; i < 40; i++) {
   });
 }
 
+// Explosion
 function createExplosion(x, y) {
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 180; i++) {
     particles.push({
       x,
       y,
