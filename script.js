@@ -1,33 +1,24 @@
 const textEl = document.getElementById("text");
 const music = document.getElementById("music");
 
-document.body.classList.add("dark");
-
-// MUSIC
 music.volume = 0.6;
+
+// MUSIC START
 document.body.addEventListener("click", () => {
   music.play().catch(()=>{});
-}, { once: true });
+}, { once:true });
 
-// STORY (refined emotional script)
+// STORY
 const scenes = [
-"I didn’t realize how quiet everything felt...",
+"I did not realize how quiet everything felt...",
 "Not peaceful... just empty.",
-"Days passed... but nothing really stayed.",
 "And then... you came into my life.",
-"Not like a storm...",
-"But like a warmth I didn’t know I needed.",
-"Slowly... things began to change.",
-"The darkness didn’t feel as heavy anymore.",
-"And somehow...",
-"You became my favorite part of everything.",
-"Even now...",
-"When we don’t talk anymore...",
+"Slowly... everything began to change.",
+"You became my favorite part of every day.",
+"Even now... when we do not talk anymore...",
 "My heart still finds you.",
-"In silence...",
-"In songs...",
-"In everything.",
-"Maybe I’m late to say this...",
+"In silence... in songs... in everything.",
+"Maybe I am late...",
 "But this feeling never left.",
 "If I could choose again...",
 "In every lifetime...",
@@ -38,109 +29,106 @@ const scenes = [
 
 let index = 0;
 
-// TYPEWRITER (SMOOTH + SLOW)
-function typeText(text) {
-  textEl.innerHTML = "";
-  let i = 0;
-
-  function typing() {
-    if (i < text.length) {
-      textEl.innerHTML += text.charAt(i);
+// TYPE EFFECT
+function typeText(text){
+  textEl.innerHTML="";
+  let i=0;
+  function typing(){
+    if(i<text.length){
+      textEl.innerHTML+=text.charAt(i);
       i++;
-
-      let delay = 55;
-
-      if (text[i-1] === ".") delay = 300;
-
-      setTimeout(typing, delay);
+      let delay=60;
+      if(text[i-1]===".") delay=300;
+      setTimeout(typing,delay);
     }
   }
-
   typing();
 }
 
-// TAP EVENT
-document.body.addEventListener("click", (e) => {
-
-  if (index < scenes.length) {
+// TAP FLOW
+document.body.addEventListener("click", (e)=>{
+  if(index<scenes.length){
 
     typeText(scenes[index]);
 
-    // COLOR TRANSITION
-    if (index > 5 && index < 15) {
-      document.body.classList.remove("dark");
-      document.body.classList.add("mid");
+    // COLOR SHIFT
+    if(index>3 && index<10) document.body.className="mid";
+    if(index>=10) document.body.className="light";
+
+    spawnBurst(e.clientX,e.clientY,5);
+
+    // HEARTBEAT NEAR END
+    if(index>=10){
+      textEl.classList.add("pulse");
     }
 
-    if (index >= 15) {
-      document.body.classList.remove("mid");
-      document.body.classList.add("light");
-    }
-
-    spawnIcon(e.clientX, e.clientY, index);
-
-    if (index === scenes.length - 1) {
-      setTimeout(() => {
-        createExplosion(window.innerWidth/2, window.innerHeight/2);
-      }, 800);
+    // FINAL
+    if(index===scenes.length-1){
+      setTimeout(()=>{
+        createExplosion(window.innerWidth/2,window.innerHeight/2);
+        showOptions();
+      },1000);
     }
 
     index++;
   }
-
 });
 
-// ICON SPAWNER (hearts, petals, ring)
-function spawnIcon(x, y, step) {
-  const el = document.createElement("div");
+// HOLD EFFECT
+let holdInterval;
+document.body.addEventListener("mousedown",(e)=>{
+  holdInterval=setInterval(()=>{
+    spawnBurst(e.clientX,e.clientY,10);
+  },200);
+});
+document.body.addEventListener("mouseup",()=>clearInterval(holdInterval));
 
-  const icons = ["❤️","🌸","💖","💍"];
-  el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-
-  el.style.position = "absolute";
-  el.style.left = x + "px";
-  el.style.top = y + "px";
-  el.style.fontSize = "20px";
-  el.style.opacity = "0.9";
-  el.style.animation = "floatUp 2.5s ease-out forwards";
-
-  document.body.appendChild(el);
-
-  setTimeout(() => el.remove(), 2500);
+// ICON BURST
+function spawnBurst(x,y,count){
+  const icons=["❤️","🌸","💖","💍"];
+  for(let i=0;i<count;i++){
+    const el=document.createElement("div");
+    el.innerHTML=icons[Math.floor(Math.random()*icons.length)];
+    el.style.position="absolute";
+    el.style.left=x+"px";
+    el.style.top=y+"px";
+    el.style.fontSize="20px";
+    el.style.animation=`floatUp ${2+Math.random()*2}s ease-out forwards`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  }
 }
 
-// FLOAT ANIMATION
-const style = document.createElement('style');
-style.innerHTML = `
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(0.8); opacity: 1; }
-  100% { transform: translateY(-200px) scale(1.4); opacity: 0; }
+// FLOAT
+const style=document.createElement("style");
+style.innerHTML=`
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(0.8);opacity:1;}
+  100%{transform:translateY(-300px) scale(1.5);opacity:0;}
 }`;
 document.head.appendChild(style);
 
 // EXPLOSION
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
+let particles=[];
 
 function createExplosion(x,y){
-  for(let i=0;i<200;i++){
+  for(let i=0;i<300;i++){
     particles.push({
       x,y,
-      dx:(Math.random()-0.5)*10,
-      dy:(Math.random()-0.5)*10,
-      life:100
+      dx:(Math.random()-0.5)*12,
+      dy:(Math.random()-0.5)*12,
+      life:150
     });
   }
 }
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
   particles.forEach((p,i)=>{
     p.x+=p.dx;
     p.y+=p.dy;
@@ -153,11 +141,22 @@ function animate(){
 
     if(p.life<=0) particles.splice(i,1);
   });
-
   requestAnimationFrame(animate);
 }
-
 animate();
 
-// START FIRST TEXT
+// OPTIONS
+function showOptions(){
+  document.getElementById("endOptions").classList.remove("hidden");
+}
+
+function restart(){
+  location.reload();
+}
+
+function lovePrompt(){
+  alert("Oh come on, seriously? If you love me, call and tell me, silly ❤️");
+}
+
+// START
 typeText(scenes[0]);
