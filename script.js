@@ -1,6 +1,7 @@
 const textEl = document.getElementById("text");
-const bg = document.getElementById("bg");
 const music = document.getElementById("music");
+
+document.body.classList.add("dark");
 
 // MUSIC
 music.volume = 0.6;
@@ -8,98 +9,36 @@ document.body.addEventListener("click", () => {
   music.play().catch(()=>{});
 }, { once: true });
 
-// STORY (Deep + K-drama style)
+// STORY (refined emotional script)
 const scenes = [
-  {
-    text: "Before you... everything felt quiet.",
-    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-  },
-  {
-    text: "Not peaceful... just empty.",
-    bg: "https://images.unsplash.com/photo-1495567720989-cebdbdd97913"
-  },
-  {
-    text: "Days passed... but nothing really stayed.",
-    bg: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-  },
-  {
-    text: "And then... you happened.",
-    bg: "https://images.unsplash.com/photo-1517841905240-472988babdf9"
-  },
-  {
-    text: "Not loudly... not suddenly...",
-    bg: "https://images.unsplash.com/photo-1529336953121-ad5a0d43d0d2"
-  },
-  {
-    text: "But gently... like something I didn’t know I needed.",
-    bg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-  },
-  {
-    text: "Somewhere along the way...",
-    bg: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
-  },
-  {
-    text: "You became my favorite part of everything.",
-    bg: "https://images.unsplash.com/photo-1511988617509-a57c8a288659"
-  },
-  {
-    text: "Even now...",
-    bg: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
-  },
-  {
-    text: "When we don’t talk anymore...",
-    bg: "https://images.unsplash.com/photo-1492724441997-5dc865305da7"
-  },
-  {
-    text: "My heart still remembers you.",
-    bg: "https://images.unsplash.com/photo-1502082553048-f009c37129b9"
-  },
-  {
-    text: "In silence...",
-    bg: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e"
-  },
-  {
-    text: "In songs...",
-    bg: "https://images.unsplash.com/photo-1500534623283-312aade485b7"
-  },
-  {
-    text: "In everything.",
-    bg: "https://images.unsplash.com/photo-1519681393784-d120267933ba"
-  },
-  {
-    text: "Maybe I’m late...",
-    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-  },
-  {
-    text: "But this feeling never left.",
-    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-  },
-  {
-    text: "If I could choose again...",
-    bg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-  },
-  {
-    text: "In every lifetime...",
-    bg: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
-  },
-  {
-    text: "I would still choose you.",
-    bg: "https://images.unsplash.com/photo-1511988617509-a57c8a288659"
-  },
-  {
-    text: "...",
-    bg: "https://images.unsplash.com/photo-1517841905240-472988babdf9"
-  },
-  {
-    text: "I love you.",
-    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-    final: true
-  }
+"I didn’t realize how quiet everything felt...",
+"Not peaceful... just empty.",
+"Days passed... but nothing really stayed.",
+"And then... you came into my life.",
+"Not like a storm...",
+"But like a warmth I didn’t know I needed.",
+"Slowly... things began to change.",
+"The darkness didn’t feel as heavy anymore.",
+"And somehow...",
+"You became my favorite part of everything.",
+"Even now...",
+"When we don’t talk anymore...",
+"My heart still finds you.",
+"In silence...",
+"In songs...",
+"In everything.",
+"Maybe I’m late to say this...",
+"But this feeling never left.",
+"If I could choose again...",
+"In every lifetime...",
+"I would still choose you.",
+"...",
+"I love you ❤️"
 ];
 
 let index = 0;
 
-// TYPE EFFECT
+// TYPEWRITER (SMOOTH + SLOW)
 function typeText(text) {
   textEl.innerHTML = "";
   let i = 0;
@@ -109,8 +48,9 @@ function typeText(text) {
       textEl.innerHTML += text.charAt(i);
       i++;
 
-      let delay = 45;
-      if (text[i-1] === ".") delay = 250;
+      let delay = 55;
+
+      if (text[i-1] === ".") delay = 300;
 
       setTimeout(typing, delay);
     }
@@ -119,24 +59,27 @@ function typeText(text) {
   typing();
 }
 
-// TAP TO CONTINUE
+// TAP EVENT
 document.body.addEventListener("click", (e) => {
 
   if (index < scenes.length) {
-    const s = scenes[index];
 
-    bg.style.backgroundImage = `url(${s.bg})`;
+    typeText(scenes[index]);
 
-    // brightness adjust
-    if (index > 10) {
-      bg.style.filter = "blur(6px) brightness(0.8)";
+    // COLOR TRANSITION
+    if (index > 5 && index < 15) {
+      document.body.classList.remove("dark");
+      document.body.classList.add("mid");
+    }
+
+    if (index >= 15) {
+      document.body.classList.remove("mid");
       document.body.classList.add("light");
     }
 
-    typeText(s.text);
-    createHeart(e.clientX, e.clientY);
+    spawnIcon(e.clientX, e.clientY, index);
 
-    if (s.final) {
+    if (index === scenes.length - 1) {
       setTimeout(() => {
         createExplosion(window.innerWidth/2, window.innerHeight/2);
       }, 800);
@@ -147,22 +90,38 @@ document.body.addEventListener("click", (e) => {
 
 });
 
-// HEART ON TOUCH
-function createHeart(x, y) {
-  const heart = document.createElement("div");
-  heart.innerHTML = "❤️";
-  heart.style.position = "absolute";
-  heart.style.left = x + "px";
-  heart.style.top = y + "px";
-  heart.style.animation = "float 2s ease-out forwards";
-  document.body.appendChild(heart);
+// ICON SPAWNER (hearts, petals, ring)
+function spawnIcon(x, y, step) {
+  const el = document.createElement("div");
 
-  setTimeout(() => heart.remove(), 2000);
+  const icons = ["❤️","🌸","💖","💍"];
+  el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+
+  el.style.position = "absolute";
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  el.style.fontSize = "20px";
+  el.style.opacity = "0.9";
+  el.style.animation = "floatUp 2.5s ease-out forwards";
+
+  document.body.appendChild(el);
+
+  setTimeout(() => el.remove(), 2500);
 }
 
-// CANVAS EXPLOSION
+// FLOAT ANIMATION
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.8); opacity: 1; }
+  100% { transform: translateY(-200px) scale(1.4); opacity: 0; }
+}`;
+document.head.appendChild(style);
+
+// EXPLOSION
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -199,3 +158,6 @@ function animate(){
 }
 
 animate();
+
+// START FIRST TEXT
+typeText(scenes[0]);
