@@ -1,68 +1,83 @@
 const textEl = document.getElementById("text");
+const titleEl = document.getElementById("title");
 const btn = document.getElementById("nextBtn");
 const hint = document.getElementById("hint");
 const music = document.getElementById("music");
+const card = document.getElementById("card");
 
-// Music fix (important)
+// MUSIC FIX
 music.volume = 0.6;
-
 document.body.addEventListener("click", () => {
   music.play().catch(()=>{});
   hint.style.display = "none";
 }, { once: true });
 
-// STORY (cinematic pacing)
-const story = [
-`I wasn't planning to say anything...`,
-
-`But silence... has been louder than words lately.`,
-
-`And somehow... it keeps bringing me back to you.`,
-
-`Do you remember those days?`,
-
-`Nothing extraordinary... just simple moments.`,
-
-`But for me... they meant everything.`,
-
-`Because you were there.`,
-
-`And without even realizing it...`,
-
-`You became my favorite part of life.`,
-
-`Even now...`,
-
-`When we don’t talk anymore...`,
-
-`My thoughts still find you.`,
-
-`In silence... in songs... in everything.`,
-
-`Maybe I shouldn’t say this...`,
-
-`Maybe I’m too late...`,
-
-`But if I don’t say it now...`,
-
-`I’ll regret it forever.`,
-
-`So just this once...`,
-
-`Let me be completely honest...`,
-
-`In every version of my life...`,
-
-`I would still choose you.`,
-
-`...`,
-
-`I Love You ❤️`
+// STORY (Dark → Light progression)
+const moments = [
+  {
+    t: "Before You...",
+    q: "Everything felt quiet... almost colorless.",
+    bg: "#050505",
+    text: "#666"
+  },
+  {
+    t: "Then You Came",
+    q: "And somehow... things started to feel different.",
+    bg: "#101015"
+  },
+  {
+    t: "A Small Change",
+    q: "It wasn’t loud... but it was enough to notice.",
+    bg: "#151520"
+  },
+  {
+    t: "Slowly...",
+    q: "The darkness didn’t feel so heavy anymore.",
+    bg: "#1f1f2a"
+  },
+  {
+    t: "Without Realizing",
+    q: "You became the light I didn’t know I needed.",
+    bg: "#2b2b38"
+  },
+  {
+    t: "Now I Know",
+    q: "It was never about the world changing...",
+    bg: "#3a3a4a"
+  },
+  {
+    t: "...",
+    q: "It was you.",
+    bg: "#4a4a5a"
+  },
+  {
+    t: "Because of You",
+    q: "Even my darkest days feel softer.",
+    bg: "#666"
+  },
+  {
+    t: "And If I’m Honest...",
+    q: "I don’t want a world where you’re not in it.",
+    bg: "#ddd",
+    text: "#222"
+  },
+  {
+    t: "So here it is...",
+    q: "The one thing I should have said earlier.",
+    bg: "#fff",
+    text: "#111"
+  },
+  {
+    t: "",
+    q: "I Love You ❤️",
+    final: true,
+    bg: "#fff"
+  }
 ];
 
 let index = 0;
 
-// Typewriter with emotional pauses
+// TYPEWRITER (SLOW + SMOOTH)
 function typeText(text) {
   textEl.innerHTML = "";
   let i = 0;
@@ -72,40 +87,41 @@ function typeText(text) {
       textEl.innerHTML += text.charAt(i);
       i++;
 
-      let char = text.charAt(i-1);
-      let delay = 35;
+      let delay = 45;
 
-      if (char === ".") delay = 250;
-      if (char === "...") delay = 400;
+      if (text[i-1] === ".") delay = 300;
 
       setTimeout(typing, delay);
-    } else {
-      btn.classList.remove("hidden");
     }
   }
 
   typing();
 }
 
-// Button flow
+// BUTTON CLICK
 btn.addEventListener("click", () => {
-  btn.classList.add("hidden");
-  index++;
+  if (index < moments.length) {
+    const m = moments[index];
 
-  if (index < story.length) {
-    typeText(story[index]);
-  }
+    document.body.style.background = m.bg;
+    if (m.text) document.body.style.color = m.text;
 
-  if (index === story.length - 1) {
-    textEl.classList.add("final");
-    createExplosion(window.innerWidth/2, window.innerHeight/2);
+    titleEl.innerText = m.t;
+    typeText(m.q);
+
+    card.classList.add("glow");
+
+    if (m.final) {
+      textEl.classList.add("final");
+      createExplosion(window.innerWidth/2, window.innerHeight/2);
+      btn.innerText = "❤️";
+    }
+
+    index++;
   }
 });
 
-// Start
-typeText(story[0]);
-
-// Canvas animation
+// HEART PARTICLES
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -114,51 +130,31 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-// Floating hearts (ambient)
-for (let i = 0; i < 40; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    dy: Math.random() * 0.5 + 0.2,
-    size: Math.random() * 2 + 1,
-    type: "float"
-  });
-}
-
-// Explosion
-function createExplosion(x, y) {
-  for (let i = 0; i < 180; i++) {
+function createExplosion(x,y){
+  for(let i=0;i<150;i++){
     particles.push({
-      x,
-      y,
-      dx: (Math.random() - 0.5) * 8,
-      dy: (Math.random() - 0.5) * 8,
-      size: Math.random() * 4 + 1,
-      life: 100,
-      type: "burst"
+      x,y,
+      dx:(Math.random()-0.5)*8,
+      dy:(Math.random()-0.5)*8,
+      life:100
     });
   }
 }
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  particles.forEach((p, i) => {
-
-    if (p.type === "float") {
-      p.y -= p.dy;
-      if (p.y < 0) p.y = canvas.height;
-    } else {
-      p.x += p.dx;
-      p.y += p.dy;
-      p.life--;
-      if (p.life <= 0) particles.splice(i, 1);
-    }
+  particles.forEach((p,i)=>{
+    p.x+=p.dx;
+    p.y+=p.dy;
+    p.life--;
 
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,105,180,0.6)";
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle="pink";
+    ctx.arc(p.x,p.y,3,0,Math.PI*2);
     ctx.fill();
+
+    if(p.life<=0) particles.splice(i,1);
   });
 
   requestAnimationFrame(animate);
