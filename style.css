@@ -1,21 +1,15 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
 body {
-  background: #0f0f1a;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0b0b0f;
   color: white;
   overflow-x: hidden;
-  transition: background 0.8s, color 0.8s;
+  transition: 0.5s;
 }
 
-/* Light Mode */
 body.light {
-  background: #ffeef2;
-  color: #222;
+  background: #f5f5f5;
+  color: #111;
 }
 
 /* Toggle */
@@ -25,84 +19,39 @@ body.light {
   right: 20px;
   cursor: pointer;
   z-index: 10;
-  font-size: 24px;
 }
 
 /* Canvas */
-#hearts {
+canvas {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   z-index: -1;
 }
 
-/* Envelope */
-.envelope-section {
+/* Intro */
+.intro {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-}
-
-.envelope {
-  width: 200px;
-  height: 140px;
-  background: #ff6b81;
-  position: relative;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-.flap {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #ff4757;
-  clip-path: polygon(0 0, 100% 0, 50% 50%);
-  transition: 0.6s;
-}
-
-.envelope.open .flap {
-  transform: rotateX(180deg);
-}
-
-.letter {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Letter Section */
-.letter-section {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   padding: 40px;
+}
+
+.typing {
+  font-size: 28px;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.continue {
+  margin-top: 40px;
+  opacity: 0.6;
+  cursor: pointer;
 }
 
 .hidden {
   display: none;
-}
-
-.letter-content {
-  max-width: 600px;
-  animation: fadeIn 2s ease;
-}
-
-.letter-content h1 {
-  margin-bottom: 20px;
-}
-
-.scroll-text {
-  margin-top: 30px;
-  opacity: 0.6;
 }
 
 /* Story */
@@ -113,11 +62,11 @@ body.light {
 .panel {
   height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
   padding: 60px;
+  font-size: 28px;
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(40px);
   transition: 1s;
 }
 
@@ -126,20 +75,12 @@ body.light {
   transform: translateY(0);
 }
 
-.final .big-text {
-  font-size: 48px;
-  margin-top: 20px;
-  animation: pulse 1.5s infinite;
+.final {
+  justify-content: center;
+  text-align: center;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@keyframes pulse {
-  0% {transform: scale(1);}
-  50% {transform: scale(1.1);}
-  100% {transform: scale(1);}
+#loveText {
+  font-size: 64px;
+  cursor: pointer;
 }
