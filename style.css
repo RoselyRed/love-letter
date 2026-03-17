@@ -29,14 +29,13 @@ body.light { background:#fff5f5; color:#3a2a2a; }
   transition:transform 0.3s ease;
 }
 
-/* HEARTBEAT EFFECT */
+/* HEARTBEAT */
 .pulse {
-  animation: pulse 1.2s infinite;
+  animation: pulse 1.4s infinite;
 }
-
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  50% { transform: scale(1.035); }
   100% { transform: scale(1); }
 }
 
@@ -66,6 +65,12 @@ button {
   background:linear-gradient(135deg,#ff4d6d,#ff758c);
   color:white;
   cursor:pointer;
+  opacity:0;
+  transform:translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+@keyframes fadeIn {
+  to { opacity:1; transform:translateY(0); }
 }
 
 /* CANVAS */
