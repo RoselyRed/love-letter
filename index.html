@@ -1,86 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>For You ❤️</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>For You</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Theme Toggle -->
-<div class="toggle" id="themeToggle">🌙</div>
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946e3b0e1a.mp3" type="audio/mp3">
+</audio>
 
-<!-- Floating Hearts Canvas -->
-<canvas id="hearts"></canvas>
+<!-- CANVAS -->
+<canvas id="canvas"></canvas>
 
-<!-- Envelope Section -->
-<section class="envelope-section">
-  <div class="envelope" id="envelope">
-    <div class="flap"></div>
-    <div class="letter">
-      <p>Click to open 💌</p>
-    </div>
-  </div>
-</section>
+<!-- MAIN CONTAINER -->
+<div class="container">
 
-<!-- Love Letter -->
-<section class="letter-section hidden" id="letterSection">
-  <div class="letter-content">
-    <h1>To You ❤️</h1>
-    <p>
-      I don't know how to say this perfectly…  
-      but if this moment was the last one I had,  
-      I would still choose to spend it telling you this.
-    </p>
-    <p>
-      Somewhere between all the normal days,  
-      you became my favorite part of life.
-    </p>
-    <p>
-      Not loud, not dramatic…  
-      just quietly, deeply, completely.
-    </p>
-    <p class="scroll-text">Scroll slowly…</p>
-  </div>
-</section>
+  <div class="text" id="text"></div>
 
-<!-- Story Sections -->
-<section class="story">
-  <div class="panel">
-    <h2>The Day I Noticed You</h2>
-    <p>
-      It wasn’t a big moment.  
-      No background music… no slow motion.  
-      But somehow, everything felt different.
-    </p>
-  </div>
+  <button id="nextBtn" class="hidden">Next</button>
 
-  <div class="panel">
-    <h2>Somewhere Along the Way</h2>
-    <p>
-      You became the reason I smiled at random times.  
-      The reason small things started to matter more.
-    </p>
-  </div>
-
-  <div class="panel">
-    <h2>What You Mean to Me</h2>
-    <p>
-      You are peace.  
-      You are chaos in the best way.  
-      You are home… in a person.
-    </p>
-  </div>
-
-  <div class="panel final">
-    <h2>So Here It Is…</h2>
-    <p>
-      If this was my only chance,  
-      I wouldn’t complicate it.
-    </p>
-    <h1 class="big-text">I Love You ❤️</h1>
-  </div>
-</section>
+</div>
 
 <script src="script.js"></script>
 </body>
