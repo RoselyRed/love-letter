@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark">
 
 <audio id="music" loop preload="auto">
   <source src="music.mp3" type="audio/mp3">
@@ -18,7 +18,12 @@
 <div class="content">
   <div id="text"></div>
   <div id="cursor">|</div>
-  <div id="hint">tap anywhere...</div>
+  <div id="hint">tap or hold anywhere...</div>
+
+  <div id="endOptions" class="hidden">
+    <button onclick="restart()">✨ See it again?</button>
+    <button onclick="lovePrompt()">💬 Do you love him?</button>
+  </div>
 </div>
 
 <script src="script.js"></script>
