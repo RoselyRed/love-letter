@@ -1,71 +1,135 @@
-// Envelope Open
-const envelope = document.getElementById("envelope");
-const letterSection = document.getElementById("letterSection");
+const textEl = document.getElementById("text");
+const btn = document.getElementById("nextBtn");
+const music = document.getElementById("music");
 
-envelope.addEventListener("click", () => {
-  envelope.classList.add("open");
+// Start music on first click
+document.body.addEventListener("click", () => {
+  music.play();
+}, { once: true });
 
-  setTimeout(() => {
-    document.querySelector(".envelope-section").style.display = "none";
-    letterSection.classList.remove("hidden");
-  }, 800);
-});
+// STORY FLOW (K-Drama style pacing)
+const story = [
+`I wasn't planning to say anything...`,
 
-// Scroll Animation
-const panels = document.querySelectorAll(".panel");
+`But silence has a way of saying too much...`,
 
-window.addEventListener("scroll", () => {
-  panels.forEach(panel => {
-    const top = panel.getBoundingClientRect().top;
-    if (top < window.innerHeight - 100) {
-      panel.classList.add("show");
+`And lately... it has been saying your name.`,
+
+`Do you remember... those normal days?`,
+
+`Nothing special... nothing dramatic...`,
+
+`But somehow... you became my favorite part of them.`,
+
+`I didn’t notice when it happened...`,
+
+`But I started looking for you in everything.`,
+
+`In songs... in silence... in small moments.`,
+
+`Even now... when we don’t talk anymore...`,
+
+`My world still pauses... when I think of you.`,
+
+`And maybe I shouldn't say this...`,
+
+`But if I lose this chance... I’ll regret it forever.`,
+
+`So just this once... let me be honest...`,
+
+`You were never just someone to me.`,
+
+`You were... everything.`,
+
+`And if I could choose again...`,
+
+`In every lifetime...`,
+
+`I would still choose you.`,
+
+`...`,
+
+`I Love You ❤️`
+];
+
+let index = 0;
+
+// TYPE EFFECT
+function typeText(text, callback) {
+  textEl.innerHTML = "";
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      textEl.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, 35);
+    } else {
+      btn.classList.remove("hidden");
     }
-  });
+  }
+
+  typing();
+}
+
+// NEXT BUTTON
+btn.addEventListener("click", () => {
+  btn.classList.add("hidden");
+  index++;
+
+  if (index < story.length) {
+    typeText(story[index]);
+  }
+
+  // FINAL EFFECT
+  if (index === story.length - 1) {
+    textEl.classList.add("glow");
+    createExplosion(window.innerWidth/2, window.innerHeight/2);
+  }
 });
 
-// Theme Toggle
-const toggle = document.getElementById("themeToggle");
+// START
+typeText(story[0]);
 
-toggle.addEventListener("click", () => {
-  document.body.classList.toggle("light");
-  toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
-});
-
-// Floating Hearts
-const canvas = document.getElementById("hearts");
+// HEART EXPLOSION
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let hearts = [];
+let particles = [];
 
-for (let i = 0; i < 50; i++) {
-  hearts.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 4 + 1,
-    speed: Math.random() * 1 + 0.5
-  });
+function createExplosion(x, y) {
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x,
+      y,
+      dx: (Math.random() - 0.5) * 8,
+      dy: (Math.random() - 0.5) * 8,
+      size: Math.random() * 5,
+      life: 100
+    });
+  }
 }
 
-function drawHearts() {
+function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  hearts.forEach(h => {
+  particles.forEach((p, i) => {
+    p.x += p.dx;
+    p.y += p.dy;
+    p.life--;
+
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255, 105, 180, 0.6)";
-    ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
+    ctx.fillStyle = "pink";
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
 
-    h.y -= h.speed;
-    if (h.y < 0) {
-      h.y = canvas.height;
-      h.x = Math.random() * canvas.width;
-    }
+    if (p.life <= 0) particles.splice(i, 1);
   });
 
-  requestAnimationFrame(drawHearts);
+  requestAnimationFrame(animate);
 }
 
-drawHearts();
+animate();
