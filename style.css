@@ -1,40 +1,33 @@
 body {
   margin: 0;
-  background: #0a0a0f;
+  background: radial-gradient(circle at center, #111 0%, #050508 100%);
   color: white;
   font-family: 'Segoe UI', sans-serif;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 /* Container */
 .container {
   text-align: center;
-  width: 100%;
   max-width: 700px;
-}
-
-/* Glass Box */
-.box {
-  padding: 40px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 40px rgba(255, 105, 180, 0.2);
+  padding: 20px;
 }
 
 /* Text */
 #text {
-  font-size: 26px;
-  line-height: 1.6;
-  min-height: 120px;
+  font-size: 30px;
+  line-height: 1.7;
+  min-height: 140px;
+  transition: all 0.5s ease;
 }
 
 /* Hint */
 #hint {
-  margin-top: 20px;
+  margin-top: 30px;
   opacity: 0.6;
   font-size: 14px;
   animation: blink 1.5s infinite;
@@ -46,8 +39,8 @@ body {
 
 /* Button */
 button {
-  margin-top: 30px;
-  padding: 12px 30px;
+  margin-top: 40px;
+  padding: 14px 36px;
   border: none;
   border-radius: 30px;
   background: linear-gradient(135deg, #ff4d6d, #ff758c);
@@ -59,7 +52,7 @@ button {
 
 @keyframes pulse {
   0% { transform: scale(1);}
-  50% { transform: scale(1.05);}
+  50% { transform: scale(1.06);}
   100% { transform: scale(1);}
 }
 
@@ -75,13 +68,13 @@ canvas {
   z-index: -1;
 }
 
-/* Final glow */
+/* Final Glow */
 .final {
-  font-size: 60px;
+  font-size: 64px;
   animation: glow 1.5s infinite alternate;
 }
 
 @keyframes glow {
   from { text-shadow: 0 0 10px pink; }
-  to { text-shadow: 0 0 40px red; }
+  to { text-shadow: 0 0 50px red; }
 }
