@@ -1,81 +1,107 @@
-const chatBox = document.getElementById("chatBox");
+const textEl = document.getElementById("text");
 const btn = document.getElementById("nextBtn");
+const hint = document.getElementById("hint");
 const music = document.getElementById("music");
 
-// Start music
+// Ensure music works
+music.volume = 0.6;
+
 document.body.addEventListener("click", () => {
-  music.play();
+  music.play().catch(() => {});
+  hint.style.display = "none";
 }, { once: true });
 
-// STORY (Messenger style)
-const messages = [
-  { text: "Hey...", type: "sent" },
-  { text: "I don’t even know if I should text this...", type: "sent" },
-  { text: "But I couldn’t keep it inside anymore.", type: "sent" },
+// STORY (Refined emotional pacing)
+const story = [
+`I wasn’t planning to say anything...`,
 
-  { text: "You probably don’t expect this from me.", type: "sent" },
+`But silence... has been louder than words lately.`,
 
-  { text: "But do you remember those normal days?", type: "sent" },
-  { text: "Nothing special... just us existing...", type: "sent" },
+`And somehow... it keeps bringing me back to you.`,
 
-  { text: "Somehow... you became my favorite part of everything.", type: "sent" },
+`Do you remember those days?`,
 
-  { text: "And I didn’t even realize when it happened.", type: "sent" },
+`Nothing extraordinary... just simple moments.`,
 
-  { text: "Now even silence reminds me of you.", type: "sent" },
+`But for me... they meant everything.`,
 
-  { text: "Even when we don’t talk anymore...", type: "sent" },
+`Because you were there.`,
 
-  { text: "You’re still the first thought I have.", type: "sent" },
+`And without realizing it...`,
 
-  { text: "Maybe I’m late to say this...", type: "sent" },
+`You became my favorite part of life.`,
 
-  { text: "But if I don’t say it now… I never will.", type: "sent" },
+`Even now...`,
 
-  { text: "So here it is…", type: "sent" },
+`When we don’t talk anymore...`,
 
-  { text: "I Love You ❤️", type: "sent", final: true }
+`My mind still finds you... in everything.`,
+
+`Maybe I shouldn’t say this...`,
+
+`Maybe I’m too late...`,
+
+`But if I don’t say it now... I never will.`,
+
+`So just this once...`,
+
+`Let me be honest...`,
+
+`In every version of my life...`,
+
+`I would still choose you.`,
+
+`...`,
+
+`I Love You ❤️`
 ];
 
 let index = 0;
 
-// Typing simulation
-function addMessage(msg) {
-  const div = document.createElement("div");
-  div.classList.add("message", msg.type);
-
-  if (msg.final) div.classList.add("final");
-
+// TYPEWRITER WITH PAUSE
+function typeText(text, callback) {
+  textEl.innerHTML = "";
   let i = 0;
+
   function typing() {
-    if (i < msg.text.length) {
-      div.innerHTML += msg.text.charAt(i);
+    if (i < text.length) {
+      textEl.innerHTML += text.charAt(i);
       i++;
-      setTimeout(typing, 25);
+
+      let delay = 35;
+
+      if (text.charAt(i-1) === "." || text.charAt(i-1) === "...") {
+        delay = 300; // pause effect
+      }
+
+      setTimeout(typing, delay);
+    } else {
+      btn.classList.remove("hidden");
     }
   }
 
   typing();
-
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Button click
+// NEXT BUTTON
 btn.addEventListener("click", () => {
-  if (index < messages.length) {
-    addMessage(messages[index]);
+  btn.classList.add("hidden");
+  index++;
 
-    if (messages[index].final) {
-      createExplosion(window.innerWidth/2, window.innerHeight/2);
-      btn.innerText = "❤️";
-    }
+  if (index < story.length) {
+    typeText(story[index]);
+  }
 
-    index++;
+  if (index === story.length - 1) {
+    textEl.classList.add("final");
+    createExplosion(window.innerWidth/2, window.innerHeight/2);
   }
 });
 
-// HEART EXPLOSION
+// START FIRST TEXT
+typeText(story[0]);
+
+// CANVAS (Floating + Explosion)
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -84,15 +110,27 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
+// Ambient floating hearts
+for (let i = 0; i < 40; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    dy: Math.random() * 0.5 + 0.2,
+    size: Math.random() * 2 + 1,
+    type: "float"
+  });
+}
+
 function createExplosion(x, y) {
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 150; i++) {
     particles.push({
       x,
       y,
       dx: (Math.random() - 0.5) * 8,
       dy: (Math.random() - 0.5) * 8,
-      size: Math.random() * 5,
-      life: 100
+      size: Math.random() * 4 + 1,
+      life: 100,
+      type: "burst"
     });
   }
 }
@@ -101,16 +139,21 @@ function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((p, i) => {
-    p.x += p.dx;
-    p.y += p.dy;
-    p.life--;
+
+    if (p.type === "float") {
+      p.y -= p.dy;
+      if (p.y < 0) p.y = canvas.height;
+    } else {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.life--;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
 
     ctx.beginPath();
-    ctx.fillStyle = "pink";
+    ctx.fillStyle = "rgba(255,105,180,0.6)";
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
-
-    if (p.life <= 0) particles.splice(i, 1);
   });
 
   requestAnimationFrame(animate);
