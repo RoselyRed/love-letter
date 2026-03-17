@@ -1,95 +1,79 @@
-const textEl = document.getElementById("text");
+const chatBox = document.getElementById("chatBox");
 const btn = document.getElementById("nextBtn");
 const music = document.getElementById("music");
 
-// Start music on first click
+// Start music
 document.body.addEventListener("click", () => {
   music.play();
 }, { once: true });
 
-// STORY FLOW (K-Drama style pacing)
-const story = [
-`I wasn't planning to say anything...`,
+// STORY (Messenger style)
+const messages = [
+  { text: "Hey...", type: "sent" },
+  { text: "I don’t even know if I should text this...", type: "sent" },
+  { text: "But I couldn’t keep it inside anymore.", type: "sent" },
 
-`But silence has a way of saying too much...`,
+  { text: "You probably don’t expect this from me.", type: "sent" },
 
-`And lately... it has been saying your name.`,
+  { text: "But do you remember those normal days?", type: "sent" },
+  { text: "Nothing special... just us existing...", type: "sent" },
 
-`Do you remember... those normal days?`,
+  { text: "Somehow... you became my favorite part of everything.", type: "sent" },
 
-`Nothing special... nothing dramatic...`,
+  { text: "And I didn’t even realize when it happened.", type: "sent" },
 
-`But somehow... you became my favorite part of them.`,
+  { text: "Now even silence reminds me of you.", type: "sent" },
 
-`I didn’t notice when it happened...`,
+  { text: "Even when we don’t talk anymore...", type: "sent" },
 
-`But I started looking for you in everything.`,
+  { text: "You’re still the first thought I have.", type: "sent" },
 
-`In songs... in silence... in small moments.`,
+  { text: "Maybe I’m late to say this...", type: "sent" },
 
-`Even now... when we don’t talk anymore...`,
+  { text: "But if I don’t say it now… I never will.", type: "sent" },
 
-`My world still pauses... when I think of you.`,
+  { text: "So here it is…", type: "sent" },
 
-`And maybe I shouldn't say this...`,
-
-`But if I lose this chance... I’ll regret it forever.`,
-
-`So just this once... let me be honest...`,
-
-`You were never just someone to me.`,
-
-`You were... everything.`,
-
-`And if I could choose again...`,
-
-`In every lifetime...`,
-
-`I would still choose you.`,
-
-`...`,
-
-`I Love You ❤️`
+  { text: "I Love You ❤️", type: "sent", final: true }
 ];
 
 let index = 0;
 
-// TYPE EFFECT
-function typeText(text, callback) {
-  textEl.innerHTML = "";
-  let i = 0;
+// Typing simulation
+function addMessage(msg) {
+  const div = document.createElement("div");
+  div.classList.add("message", msg.type);
 
+  if (msg.final) div.classList.add("final");
+
+  let i = 0;
   function typing() {
-    if (i < text.length) {
-      textEl.innerHTML += text.charAt(i);
+    if (i < msg.text.length) {
+      div.innerHTML += msg.text.charAt(i);
       i++;
-      setTimeout(typing, 35);
-    } else {
-      btn.classList.remove("hidden");
+      setTimeout(typing, 25);
     }
   }
 
   typing();
+
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// NEXT BUTTON
+// Button click
 btn.addEventListener("click", () => {
-  btn.classList.add("hidden");
-  index++;
+  if (index < messages.length) {
+    addMessage(messages[index]);
 
-  if (index < story.length) {
-    typeText(story[index]);
-  }
+    if (messages[index].final) {
+      createExplosion(window.innerWidth/2, window.innerHeight/2);
+      btn.innerText = "❤️";
+    }
 
-  // FINAL EFFECT
-  if (index === story.length - 1) {
-    textEl.classList.add("glow");
-    createExplosion(window.innerWidth/2, window.innerHeight/2);
+    index++;
   }
 });
-
-// START
-typeText(story[0]);
 
 // HEART EXPLOSION
 const canvas = document.getElementById("canvas");
@@ -101,7 +85,7 @@ canvas.height = window.innerHeight;
 let particles = [];
 
 function createExplosion(x, y) {
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 200; i++) {
     particles.push({
       x,
       y,
