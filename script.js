@@ -1,83 +1,105 @@
 const textEl = document.getElementById("text");
-const titleEl = document.getElementById("title");
-const btn = document.getElementById("nextBtn");
-const hint = document.getElementById("hint");
+const bg = document.getElementById("bg");
 const music = document.getElementById("music");
-const card = document.getElementById("card");
 
-// MUSIC FIX
+// MUSIC
 music.volume = 0.6;
 document.body.addEventListener("click", () => {
   music.play().catch(()=>{});
-  hint.style.display = "none";
 }, { once: true });
 
-// STORY (Dark → Light progression)
-const moments = [
+// STORY (Deep + K-drama style)
+const scenes = [
   {
-    t: "Before You...",
-    q: "Everything felt quiet... almost colorless.",
-    bg: "#050505",
-    text: "#666"
+    text: "Before you... everything felt quiet.",
+    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
   },
   {
-    t: "Then You Came",
-    q: "And somehow... things started to feel different.",
-    bg: "#101015"
+    text: "Not peaceful... just empty.",
+    bg: "https://images.unsplash.com/photo-1495567720989-cebdbdd97913"
   },
   {
-    t: "A Small Change",
-    q: "It wasn’t loud... but it was enough to notice.",
-    bg: "#151520"
+    text: "Days passed... but nothing really stayed.",
+    bg: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
   },
   {
-    t: "Slowly...",
-    q: "The darkness didn’t feel so heavy anymore.",
-    bg: "#1f1f2a"
+    text: "And then... you happened.",
+    bg: "https://images.unsplash.com/photo-1517841905240-472988babdf9"
   },
   {
-    t: "Without Realizing",
-    q: "You became the light I didn’t know I needed.",
-    bg: "#2b2b38"
+    text: "Not loudly... not suddenly...",
+    bg: "https://images.unsplash.com/photo-1529336953121-ad5a0d43d0d2"
   },
   {
-    t: "Now I Know",
-    q: "It was never about the world changing...",
-    bg: "#3a3a4a"
+    text: "But gently... like something I didn’t know I needed.",
+    bg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
   },
   {
-    t: "...",
-    q: "It was you.",
-    bg: "#4a4a5a"
+    text: "Somewhere along the way...",
+    bg: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
   },
   {
-    t: "Because of You",
-    q: "Even my darkest days feel softer.",
-    bg: "#666"
+    text: "You became my favorite part of everything.",
+    bg: "https://images.unsplash.com/photo-1511988617509-a57c8a288659"
   },
   {
-    t: "And If I’m Honest...",
-    q: "I don’t want a world where you’re not in it.",
-    bg: "#ddd",
-    text: "#222"
+    text: "Even now...",
+    bg: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
   },
   {
-    t: "So here it is...",
-    q: "The one thing I should have said earlier.",
-    bg: "#fff",
-    text: "#111"
+    text: "When we don’t talk anymore...",
+    bg: "https://images.unsplash.com/photo-1492724441997-5dc865305da7"
   },
   {
-    t: "",
-    q: "I Love You ❤️",
-    final: true,
-    bg: "#fff"
+    text: "My heart still remembers you.",
+    bg: "https://images.unsplash.com/photo-1502082553048-f009c37129b9"
+  },
+  {
+    text: "In silence...",
+    bg: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e"
+  },
+  {
+    text: "In songs...",
+    bg: "https://images.unsplash.com/photo-1500534623283-312aade485b7"
+  },
+  {
+    text: "In everything.",
+    bg: "https://images.unsplash.com/photo-1519681393784-d120267933ba"
+  },
+  {
+    text: "Maybe I’m late...",
+    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+  },
+  {
+    text: "But this feeling never left.",
+    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+  },
+  {
+    text: "If I could choose again...",
+    bg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    text: "In every lifetime...",
+    bg: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
+  },
+  {
+    text: "I would still choose you.",
+    bg: "https://images.unsplash.com/photo-1511988617509-a57c8a288659"
+  },
+  {
+    text: "...",
+    bg: "https://images.unsplash.com/photo-1517841905240-472988babdf9"
+  },
+  {
+    text: "I love you.",
+    bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    final: true
   }
 ];
 
 let index = 0;
 
-// TYPEWRITER (SLOW + SMOOTH)
+// TYPE EFFECT
 function typeText(text) {
   textEl.innerHTML = "";
   let i = 0;
@@ -88,8 +110,7 @@ function typeText(text) {
       i++;
 
       let delay = 45;
-
-      if (text[i-1] === ".") delay = 300;
+      if (text[i-1] === ".") delay = 250;
 
       setTimeout(typing, delay);
     }
@@ -98,44 +119,61 @@ function typeText(text) {
   typing();
 }
 
-// BUTTON CLICK
-btn.addEventListener("click", () => {
-  if (index < moments.length) {
-    const m = moments[index];
+// TAP TO CONTINUE
+document.body.addEventListener("click", (e) => {
 
-    document.body.style.background = m.bg;
-    if (m.text) document.body.style.color = m.text;
+  if (index < scenes.length) {
+    const s = scenes[index];
 
-    titleEl.innerText = m.t;
-    typeText(m.q);
+    bg.style.backgroundImage = `url(${s.bg})`;
 
-    card.classList.add("glow");
+    // brightness adjust
+    if (index > 10) {
+      bg.style.filter = "blur(6px) brightness(0.8)";
+      document.body.classList.add("light");
+    }
 
-    if (m.final) {
-      textEl.classList.add("final");
-      createExplosion(window.innerWidth/2, window.innerHeight/2);
-      btn.innerText = "❤️";
+    typeText(s.text);
+    createHeart(e.clientX, e.clientY);
+
+    if (s.final) {
+      setTimeout(() => {
+        createExplosion(window.innerWidth/2, window.innerHeight/2);
+      }, 800);
     }
 
     index++;
   }
+
 });
 
-// HEART PARTICLES
+// HEART ON TOUCH
+function createHeart(x, y) {
+  const heart = document.createElement("div");
+  heart.innerHTML = "❤️";
+  heart.style.position = "absolute";
+  heart.style.left = x + "px";
+  heart.style.top = y + "px";
+  heart.style.animation = "float 2s ease-out forwards";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 2000);
+}
+
+// CANVAS EXPLOSION
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
 
 function createExplosion(x,y){
-  for(let i=0;i<150;i++){
+  for(let i=0;i<200;i++){
     particles.push({
       x,y,
-      dx:(Math.random()-0.5)*8,
-      dy:(Math.random()-0.5)*8,
+      dx:(Math.random()-0.5)*10,
+      dy:(Math.random()-0.5)*10,
       life:100
     });
   }
