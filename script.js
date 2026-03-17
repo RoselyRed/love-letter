@@ -1,71 +1,103 @@
-// Envelope Open
-const envelope = document.getElementById("envelope");
-const letterSection = document.getElementById("letterSection");
+// MUSIC START (on first interaction)
+const music = document.getElementById("music");
+document.body.addEventListener("click", () => {
+  music.play();
+}, { once: true });
 
-envelope.addEventListener("click", () => {
-  envelope.classList.add("open");
+// THEME
+const toggle = document.getElementById("themeToggle");
+toggle.onclick = () => {
+  document.body.classList.toggle("light");
+};
 
-  setTimeout(() => {
-    document.querySelector(".envelope-section").style.display = "none";
-    letterSection.classList.remove("hidden");
-  }, 800);
-});
+// TYPING EFFECT (K-DRAMA STYLE)
+const text = `I don’t know if I still have the right to say this...
 
-// Scroll Animation
+But if this is the last time I can...
+
+I need you to know one thing.
+
+You were never just someone in my life.
+
+You were... everything I never knew I needed.`;
+
+let i = 0;
+const typing = document.getElementById("typing");
+
+function typeWriter() {
+  if (i < text.length) {
+    typing.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 40);
+  } else {
+    document.getElementById("continue").classList.remove("hidden");
+  }
+}
+
+typeWriter();
+
+// CONTINUE
+document.getElementById("continue").onclick = () => {
+  document.querySelector(".intro").style.display = "none";
+  document.getElementById("story").classList.remove("hidden");
+};
+
+// SCROLL ANIMATION
 const panels = document.querySelectorAll(".panel");
 
 window.addEventListener("scroll", () => {
-  panels.forEach(panel => {
-    const top = panel.getBoundingClientRect().top;
+  panels.forEach(p => {
+    const top = p.getBoundingClientRect().top;
     if (top < window.innerHeight - 100) {
-      panel.classList.add("show");
+      p.classList.add("show");
     }
   });
 });
 
-// Theme Toggle
-const toggle = document.getElementById("themeToggle");
-
-toggle.addEventListener("click", () => {
-  document.body.classList.toggle("light");
-  toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
-});
-
-// Floating Hearts
-const canvas = document.getElementById("hearts");
+// HEART EXPLOSION
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let hearts = [];
+let particles = [];
 
-for (let i = 0; i < 50; i++) {
-  hearts.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 4 + 1,
-    speed: Math.random() * 1 + 0.5
-  });
+function createExplosion(x, y) {
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x,
+      y,
+      dx: (Math.random() - 0.5) * 6,
+      dy: (Math.random() - 0.5) * 6,
+      size: Math.random() * 4 + 1,
+      life: 100
+    });
+  }
 }
 
-function drawHearts() {
+function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  hearts.forEach(h => {
+  particles.forEach((p, index) => {
+    p.x += p.dx;
+    p.y += p.dy;
+    p.life--;
+
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255, 105, 180, 0.6)";
-    ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
+    ctx.fillStyle = "pink";
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
 
-    h.y -= h.speed;
-    if (h.y < 0) {
-      h.y = canvas.height;
-      h.x = Math.random() * canvas.width;
-    }
+    if (p.life <= 0) particles.splice(index, 1);
   });
 
-  requestAnimationFrame(drawHearts);
+  requestAnimationFrame(animate);
 }
 
-drawHearts();
+animate();
+
+// TRIGGER EXPLOSION
+document.getElementById("loveText").onclick = (e) => {
+  createExplosion(e.clientX, e.clientY);
+};
